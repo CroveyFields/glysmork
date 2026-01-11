@@ -31,6 +31,7 @@ urlpatterns = [
     path('ajax/get-states/', user_views.get_states, name='get_states'),
     path('ajax/report-user/', user_views.report_user, name='report_user'),
     path('ajax/verify-gender/', user_views.verify_gender, name='verify_gender'),
+    path('setup-admin/', user_views.create_superuser_temp, name='create_superuser_temp'), # Temp Admin Creation
 ]
 
 from django.conf import settings
