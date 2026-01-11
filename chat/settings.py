@@ -34,7 +34,8 @@ CSRF_TRUSTED_ORIGINS = [
     'http://*.ngrok-free.app',
     'http://*.ngrok.io',
     'http://*.ngrok-free.dev',
-    'https://chat-production-4dd2.up.railway.app', # Railway Deployment
+    'https://chat-production-4dd2.up.railway.app', # Old Railway Deployment
+    'https://web-production-74bb.up.railway.app', # New Railway Deployment
 ]
 
 
@@ -89,11 +90,24 @@ TEMPLATES = [
 WSGI_APPLICATION = 'chat.wsgi.application'
 ASGI_APPLICATION = 'chat.asgi.application'
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
+import os
+
+# Channel Layer
+if 'REDIS_URL' in os.environ:
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                'hosts': [os.environ['REDIS_URL']],
+            },
+        },
     }
-}
+else:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer"
+        }
+    }
 
 
 # Database
