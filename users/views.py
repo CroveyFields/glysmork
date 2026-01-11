@@ -237,15 +237,3 @@ def report_user(request):
             return JsonResponse({'status': 'error', 'message': str(e)})
     
     return JsonResponse({'status': 'error', 'message': 'Invalid request'})
-
-# --- TEMPORARY ADMIN CREATION VIEW ---
-def create_superuser_temp(request):
-    try:
-        from django.contrib.auth.models import User
-        if not User.objects.filter(username='admin').exists():
-            User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
-            return JsonResponse({'status': 'Data Created', 'msg': 'User: admin, Pass: admin123'})
-        else:
-            return JsonResponse({'status': 'Exists', 'msg': 'Admin already exists'})
-    except Exception as e:
-        return JsonResponse({'status': 'Error', 'msg': str(e)})
