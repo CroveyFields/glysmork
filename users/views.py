@@ -26,15 +26,21 @@ def register(request):
             email_from = settings.EMAIL_HOST_USER if hasattr(settings, 'EMAIL_HOST_USER') else 'noreply@diamondchat.com'
             recipient_list = [form.cleaned_data.get('email')]
             
-            try:
-                send_mail(subject, message, email_from, recipient_list)
-                # Store user ID in session to verify next
-                request.session['verification_user_id'] = user.id
-                messages.info(request, f'Verification code sent to email! (Check Terminal)')
-                return redirect('verify_email')
-            except Exception as e:
-                messages.error(request, f'Error sending email: {e}')
-                return redirect('register')
+            # --- BYPASSING EMAIL FOR DEPLOYMENT TESTING ---
+            # try:
+            #     send_mail(subject, message, email_from, recipient_list)
+            #     request.session['verification_user_id'] = user.id
+            #     messages.info(request, f'Verification code sent to email! (Check Terminal)')
+            #     return redirect('verify_email')
+            # except Exception as e:
+            #     messages.error(request, f'Error sending email: {e}')
+            #     return redirect('register')
+            
+            # Auto-verify directly
+            user.profile.is_verified = True
+            user.profile.save()
+            messages.success(request, 'Account created! (Email verification skipped for testing)')
+            return redirect('login')
 
     else:
         form = UserRegisterForm()
