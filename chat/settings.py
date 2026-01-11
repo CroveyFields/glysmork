@@ -34,6 +34,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://*.ngrok-free.app',
     'http://*.ngrok.io',
     'http://*.ngrok-free.dev',
+    'https://chat-production-4dd2.up.railway.app', # Railway Deployment
 ]
 
 
