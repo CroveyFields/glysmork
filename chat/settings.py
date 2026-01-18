@@ -35,8 +35,9 @@ CSRF_TRUSTED_ORIGINS = [
     'http://*.ngrok-free.app',
     'http://*.ngrok.io',
     'http://*.ngrok-free.dev',
-    'https://chat-production-4dd2.up.railway.app', # Old Railway Deployment
     'https://web-production-74bb.up.railway.app', # New Railway Deployment
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
 ]
 
 
