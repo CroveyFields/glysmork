@@ -34,7 +34,7 @@ def start_search(request):
     target_gender = 'F' if profile.gender == 'M' else 'M'
     
     # 3. Search the "Queue" (Loop) for a waiting user
-    match = Loop.objects.filter(gender=target_gender).first()
+    match = Loop.objects.select_related('user__profile').filter(gender=target_gender).first()
 
     if match:
         # --- FOUND A MATCH! ---
@@ -145,7 +145,7 @@ def user_directory(request):
     max_price = request.GET.get('max_price', 1000)
 
     # Fix: Filter in Database with DOUBLE underscore __
-    users = Profile.objects.filter(
+    users = Profile.objects.select_related('user').filter(
         call_price__gt=0
     ).exclude(user=request.user)
 
@@ -230,7 +230,7 @@ def inbox(request):
 @login_required
 def handle_request(request, request_id, action):
     from django.db import transaction
-    call_req = CallRequest.objects.get(id = request_id)
+    call_req = CallRequest.objects.select_related('sender__profile', 'receiver__profile').get(id = request_id)
 
     if call_req.status != 'pending':
         messages.warning(request, "This request has already been processed.")
@@ -286,8 +286,8 @@ def handle_request(request, request_id, action):
 @never_cache
 def check_request_status(request):
     # Log to file for debugging
-    with open("debug_match.txt", "a") as f:
-        f.write(f"Checking status for {request.user.username}...\n")
+    # with open("debug_match.txt", "a") as f:
+    #    f.write(f"Checking status for {request.user.username}...\n")
 
     # Check for any ACCEPTED requests sent by this user
     accepted_req = CallRequest.objects.filter(sender=request.user, status='accepted').first()
@@ -295,8 +295,8 @@ def check_request_status(request):
     if accepted_req:
         room_name = accepted_req.room_name
         
-        with open("debug_match.txt", "a") as f:
-            f.write(f" -> MATCH FOUND! Room: {room_name}\n")
+        # with open("debug_match.txt", "a") as f:
+        #    f.write(f" -> MATCH FOUND! Room: {room_name}\n")
 
         # Mark as connected
         accepted_req.status = 'connected'
