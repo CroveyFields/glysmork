@@ -26,6 +26,9 @@ SECRET_KEY = 'django-insecure-(@x7v=^ivf7(#z^)kf2quks!4=lt@#$x=3#p6#t-%cg+c=c-+_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
+# Trust X-Forwarded-Proto for HTTPS on Railway/Heroku
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [
@@ -35,7 +38,9 @@ CSRF_TRUSTED_ORIGINS = [
     'http://*.ngrok-free.app',
     'http://*.ngrok.io',
     'http://*.ngrok-free.dev',
-    'https://web-production-74bb.up.railway.app', # New Railway Deployment
+    'https://web-production-74bb.up.railway.app', # Keep specific one just in case
+    'https://*.up.railway.app', # Wildcard for all Railway apps
+    'https://*.railway.app',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
 ]
