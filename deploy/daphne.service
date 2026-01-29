@@ -1,0 +1,14 @@
+[Unit]
+Description=Daphne service for Diamond Chat
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/chat
+ExecStart=/home/ubuntu/chat/venv/bin/daphne -b 0.0.0.0 -p 8000 chat.asgi:application
+Restart=always
+EnvironmentFile=/home/ubuntu/chat/.env
+
+[Install]
+WantedBy=multi-user.target
